@@ -88,11 +88,25 @@
           <label for="radiob">Area in: </label>
 
           <!-- {/* Feet */} -->
-          <input type="radio" name="areaVal" id="feet" value="Feet" /> Sq. Feet
+          <input
+            type="radio"
+            name="areaVal"
+            id="feet"
+            value="Feet"
+            onclick="getValue1()"
+            checked
+          />
+          Sq. Feet
 
           <!-- {/* Meter */} -->
-          <input type="radio" name="areaVal" id="meter" value="Meter" /> Sq.
-          Meters
+          <input
+            type="radio"
+            name="areaVal"
+            id="meter"
+            value="Meter"
+            onclick="getValue2()"
+          />
+          Sq. Meters
         </div>
 
         <!-- {/* Area Input */} -->
@@ -136,11 +150,15 @@
 
     <script>
       let unit;
-      if (document.getElementById("meter").checked) {
-        unit = document.getElementById("meter").value;
-      } else {
-        console.log(document.getElementById("meter").checked);
-        unit = document.getElementById("feet").value;
+
+      function getValue1(e) {
+        unit = "Feet";
+        document.getElementById("areaIn").innerText = "Feet";
+      }
+
+      function getValue2(e) {
+        unit = "Meter";
+        document.getElementById("areaIn").innerText = "Meter";
       }
 
       function CalculateFactors(area) {
