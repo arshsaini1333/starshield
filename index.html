@@ -173,7 +173,7 @@
 
         // 1 sq. feet = 0.092903 sq. meter
 
-        //When Unit is Feet
+        //When Unit is METER
         if (unit === "Meter") {
           factors.paint = Math.ceil(
             (Math.ceil((area * 0.092903) / 27) +
@@ -181,7 +181,7 @@
               2
           );
         }
-        // When unit is Meter
+        // When unit is FEET
         else {
           factors.paint = Math.ceil(
             (Math.ceil(area / 27) + Math.ceil(area / 28)) / 2
