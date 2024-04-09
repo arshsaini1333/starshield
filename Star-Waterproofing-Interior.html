@@ -189,14 +189,13 @@
         if (unit === "Meter") {
           let areaInSqFeet = area * 10.74;
           factors.paint = Math.ceil(
-            (Math.round(areaInSqFeet / 120) + Math.round(areaInSqFeet / 180)) /
-              2
+            (Math.ceil(areaInSqFeet / 22) + Math.ceil(areaInSqFeet / 20)) / 2
           );
         }
         // When unit is FEET
         else {
           factors.paint = Math.ceil(
-            (Math.round(area / 120) + Math.round(area / 180)) / 2
+            (Math.ceil(area / 22) + Math.ceil(area / 20)) / 2
           );
         }
 
@@ -212,9 +211,7 @@
 
         // Total Cost
         factors.cost =
-          factors.bucks20 * 14990 +
-          factors.bucks5 * 3890 +
-          factors.bucks1 * 890;
+          factors.bucks20 * 4990 + factors.bucks5 * 1690 + factors.bucks1 * 390;
 
         return factors;
       }
