@@ -193,14 +193,15 @@
         //When Unit is METER
         if (unit === "Meter") {
           factors.paint = Math.ceil(
-            (Math.ceil(area / 1.5) + Math.ceil(area / 2)) / 2
+            (Math.ceil(area / 1.5) + Math.ceil(area / 2.5)) / 2
           );
         }
         // When unit is FEET
         else {
           let areaInSqMeter = area / 10.74;
           factors.paint = Math.ceil(
-            (Math.ceil(areaInSqMeter / 1.5) + Math.ceil(areaInSqMeter / 2)) / 2
+            (Math.ceil(areaInSqMeter / 1.5) + Math.ceil(areaInSqMeter / 2.5)) /
+              2
           );
         }
 

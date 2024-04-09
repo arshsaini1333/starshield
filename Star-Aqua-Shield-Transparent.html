@@ -175,7 +175,6 @@
       }
 
       function CalculateFactors(area) {
-        console.log(unit);
         // Object for our all factors
         let factors = {
           paint: 0,
@@ -188,16 +187,17 @@
         // 1 sq. meter = 10.74 sq feet
         //When Unit is METER
         if (unit === "Meter") {
-          let areaInSqFeet = area * 10.74;
           factors.paint = Math.ceil(
-            (Math.round(areaInSqFeet / 120) + Math.round(areaInSqFeet / 180)) /
-              2
+            (Math.round(area / 1.5) + Math.round(area / 2.5)) / 2
           );
         }
         // When unit is FEET
         else {
+          let areaInSqMeter = area / 10.74;
           factors.paint = Math.ceil(
-            (Math.round(area / 120) + Math.round(area / 180)) / 2
+            (Math.round(areaInSqMeter / 1.5) +
+              Math.round(areaInSqMeter / 2.5)) /
+              2
           );
         }
 

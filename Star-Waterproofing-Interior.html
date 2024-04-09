@@ -79,7 +79,7 @@
   <body>
     <div class="Calculator">
       <div class="Content">
-        <h2>Star Aqua Shield</h2>
+        <h2>Star Waterproofing Interior</h2>
         <h3>Paint Coverage & Cost Calculator</h3>
         <!-- {/* Meter or Feet Radio Buttons */} -->
         <div class="radioBtn">
@@ -131,11 +131,8 @@
           <div class="NoOfBuck">
             No. of Buckets Needed:
             <ul>
-              <li>
-                - No of Bucket of 18.2 Ltr: <span id="noOfBuck18l"></span>
-              </li>
-              <li>- No of Bucket of 9.1 Ltr: <span id="noOfBuck9l"></span></li>
-              <li>- No of Bucket of 3.6 Ltr: <span id="noOfBuck3l"></span></li>
+              <li>- No of Bucket of 20 Ltr: <span id="noOfBuck20l"></span></li>
+              <li>- No of Bucket of 5 Ltr: <span id="noOfBuck5l"></span></li>
               <li>- No of Bucket of 1 Ltr: <span id="noOfBuck1l"></span></li>
             </ul>
           </div>
@@ -149,7 +146,7 @@
     </div>
 
     <script>
-      let unit;
+      let unit = "Feet";
 
       function getValue1(e) {
         unit = "Feet";
@@ -161,7 +158,6 @@
         document.getElementById("areaIn").innerText = "Meter";
       }
 
-      //Function To Calculate Buckets
       function calculateBuckets(totalPaint, bucketSizes) {
         let bucketsNeeded = {};
 
@@ -182,9 +178,8 @@
         // Object for our all factors
         let factors = {
           paint: 0,
-          bucks18: 0,
-          bucks9: 0,
-          bucks3: 0,
+          bucks20: 0,
+          bucks5: 0,
           bucks1: 0,
           cost: 0,
         };
@@ -192,35 +187,34 @@
         // 1 sq. meter = 10.74 sq feet
         //When Unit is METER
         if (unit === "Meter") {
+          let areaInSqFeet = area * 10.74;
           factors.paint = Math.ceil(
-            (Math.ceil(area / 1.5) + Math.ceil(area / 2.5)) / 2
+            (Math.round(areaInSqFeet / 120) + Math.round(areaInSqFeet / 180)) /
+              2
           );
         }
         // When unit is FEET
         else {
-          let areaInSqMeter = area / 10.74;
           factors.paint = Math.ceil(
-            (Math.ceil(areaInSqMeter / 1.5) + Math.ceil(areaInSqMeter / 2.5)) /
-              2
+            (Math.round(area / 120) + Math.round(area / 180)) / 2
           );
         }
 
-        //Buckets Used....
-        let buckSizes = [18.2, 9.1, 3.6, 1];
+        //Paint Used
+
+        let buckSizes = [20, 5, 1];
 
         let bucketsNeeded = calculateBuckets(factors.paint, buckSizes);
 
-        factors.bucks18 = bucketsNeeded[18.2];
-        factors.bucks9 = bucketsNeeded[9.1];
-        factors.bucks3 = bucketsNeeded[3.6];
+        factors.bucks20 = bucketsNeeded[20];
+        factors.bucks5 = bucketsNeeded[5];
         factors.bucks1 = bucketsNeeded[1];
 
         // Total Cost
         factors.cost =
-          factors.bucks18 * 6490 +
-          factors.bucks9 * 3490 +
-          factors.bucks3 * 1390 +
-          factors.bucks1 * 490;
+          factors.bucks20 * 14990 +
+          factors.bucks5 * 3890 +
+          factors.bucks1 * 890;
 
         return factors;
       }
@@ -235,16 +229,14 @@
           let factors = CalculateFactors(area);
 
           const paint = document.getElementById("paint");
-          const noOfBuck18l = document.getElementById("noOfBuck18l");
-          const noOfBuck9l = document.getElementById("noOfBuck9l");
-          const noOfBuck3l = document.getElementById("noOfBuck3l");
+          const noOfBuck20l = document.getElementById("noOfBuck20l");
+          const noOfBuck5l = document.getElementById("noOfBuck5l");
           const noOfBuck1l = document.getElementById("noOfBuck1l");
           const totalCost = document.getElementById("totalCost");
           //Display Result in HTML
           paint.innerText = factors.paint;
-          noOfBuck18l.innerText = factors.bucks18;
-          noOfBuck9l.innerText = factors.bucks9;
-          noOfBuck3l.innerText = factors.bucks3;
+          noOfBuck20l.innerText = factors.bucks20;
+          noOfBuck5l.innerText = factors.bucks5;
           noOfBuck1l.innerText = factors.bucks1;
           totalCost.innerText = factors.cost;
         }
