@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>StarShield</title>
+    <style>
+      .Calculator {
+        margin-top: 3rem;
+        display: flex;
+        justify-content: center;
+        font-family: "Noto Sans", sans-serif;
+      }
+
+      .Calculator .Content {
+        width: 70%;
+        padding: 1rem 3rem;
+        margin-right: 2rem;
+        box-shadow: 2px 2px 10px black;
+      }
+
+      .Calculator h3 {
+        color: #991100;
+      }
+
+      .Content form {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        width: 50%;
+      }
+
+      .Content input {
+        height: 1.5rem;
+        border-radius: 10px;
+        padding: 0.5rem;
+      }
+
+      .Content button {
+        border: none;
+        width: 25%;
+        padding: 0.5rem 0;
+        color: white;
+        background-color: #4caf50;
+        cursor: pointer;
+      }
+
+      li {
+        list-style: none;
+      }
+
+      @media screen and (max-width: 750px) {
+        .Content button {
+          width: 40%;
+        }
+      }
+
+      @media screen and (max-width: 450px) {
+        .Content button {
+          width: 60%;
+        }
+      }
+
+      .Content span {
+        margin-left: 0.5rem;
+      }
+
+      .Content label {
+        color: #991100;
+      }
+
+      .radioBtn {
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="Calculator">
+      <div class="Content">
+        <h2>
+          Star Heat Shield for Cars – Anti Heat Sun Control Thermal Glass
+          Coating
+        </h2>
+        <h3>Paint Coverage & Cost Calculator</h3>
+        <!-- {/* Meter or Feet Radio Buttons */} -->
+        <div class="radioBtn">
+          <label for="radiob">Area in: </label>
+
+          <!-- {/* Feet */} -->
+          <input
+            type="radio"
+            name="areaVal"
+            id="feet"
+            value="Feet"
+            onclick="getValue1()"
+            checked
+          />
+          Sq. Feet
+
+          <!-- {/* Meter */} -->
+          <input
+            type="radio"
+            name="areaVal"
+            id="meter"
+            value="Meter"
+            onclick="getValue2()"
+          />
+          Sq. Meters
+        </div>
+
+        <!-- {/* Area Input */} -->
+        <div class="input">
+          <form id="form">
+            <label htmlFor="area"
+              >Enter Area in Sq.<span id="areaIn">Feet</span>
+            </label>
+            <input
+              type="number"
+              id="area"
+              value=""
+              placeholder="Enter Surface Area"
+            />
+            <button type="submit">Calculate</button>
+          </form>
+        </div>
+
+        <!-- {/* Results */} -->
+        <div class="result">
+          <h3>Results:</h3>
+
+          <p>Paint Needed: <span id="paint"></span> ml</p>
+          <div class="NoOfBuck">
+            No. of Buckets Needed:
+            <ul>
+              <li>
+                - No of Components of 930 ml: <span id="noOfBuck930ml"></span>
+              </li>
+              <li>
+                - No of Bucket of 225 ml: <span id="noOfBuck225ml"></span>
+              </li>
+              <li>
+                - No of Bucket of 100 ml: <span id="noOfBuck100ml"></span>
+              </li>
+            </ul>
+          </div>
+
+          <p>
+            Cost Estimation For Star Cool Shield:
+            <span id="totalCost"></span> INR
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let unit;
+
+      function getValue1(e) {
+        unit = "Feet";
+        document.getElementById("areaIn").innerText = "Feet";
+      }
+
+      function getValue2(e) {
+        unit = "Meter";
+        document.getElementById("areaIn").innerText = "Meter";
+      }
+
+      function calculateBuckets(totalPaint, bucketSizes) {
+        let bucketsNeeded = {};
+
+        for (let size of bucketSizes) {
+          if (size == 100) {
+            bucketsNeeded[size] = Math.ceil(totalPaint / size);
+          } else bucketsNeeded[size] = Math.floor(totalPaint / size);
+          totalPaint %= size;
+        }
+
+        return bucketsNeeded;
+      }
+
+      function CalculateFactors(area) {
+        // Object for our all factors
+        let factors = {
+          paint: 0,
+          bucks930: 0,
+          bucks225: 0,
+          bucks100: 0,
+          cost: 0,
+        };
+
+        // 1 sq. meter = 10.74 sq feet
+        //When Unit is METER
+        if (unit === "Meter") {
+          let areaInSqFeet = area * 10.7639;
+          factors.paint = Math.ceil(areaInSqFeet * 2.25);
+        }
+        // When unit is FEET
+        else {
+          factors.paint = Math.ceil(area * 2.25);
+        }
+
+        //No Of Bucks Needed;
+
+        let buckSizes = [930, 225, 100];
+
+        let bucketsNeeded = calculateBuckets(factors.paint, buckSizes);
+        factors.bucks930 = bucketsNeeded[930];
+        factors.bucks225 = bucketsNeeded[225];
+        factors.bucks100 = bucketsNeeded[100];
+
+        // Total Cost
+        factors.cost =
+          factors.bucks225 * 6690 +
+          factors.bucks930 * 26990 +
+          factors.bucks100 * 3990;
+
+        return factors;
+      }
+
+      //Calling Function
+      const handleSubmit = (e) => {
+        e.preventDefault();
+        let area = document.querySelector("#area").value;
+
+        if (area != 0) {
+          //Calling the function from utils.js
+          let factors = CalculateFactors(area);
+
+          const paint = document.getElementById("paint");
+          const noOfBuck930ml = document.getElementById("noOfBuck930ml");
+          const noOfBuck225ml = document.getElementById("noOfBuck225ml");
+          const noOfBuck100ml = document.getElementById("noOfBuck100ml");
+          const totalCost = document.getElementById("totalCost");
+          //Display Result in HTML
+          paint.innerText = factors.paint;
+          noOfBuck930ml.innerText = factors.bucks930;
+          noOfBuck225ml.innerText = factors.bucks225;
+          noOfBuck100ml.innerText = factors.bucks100;
+          totalCost.innerText = factors.cost;
+        }
+      };
+
+      const form = document.getElementById("form");
+
+      form.addEventListener("submit", handleSubmit);
+    </script>
+  </body>
+</html>
