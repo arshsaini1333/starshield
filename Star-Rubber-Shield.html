@@ -83,7 +83,7 @@
         <h3>Paint Coverage & Cost Calculator</h3>
         <!-- {/* Meter or Feet Radio Buttons */} -->
         <div class="radioBtn">
-          <label for="radiob">Area in: </label>
+          <label for="radiob">Parameters in: </label>
 
           <!-- {/* Feet */} -->
           <input
@@ -94,7 +94,7 @@
             onclick="getValue1()"
             checked
           />
-          Sq. Feet
+          Feet
 
           <!-- {/* Meter */} -->
           <input
@@ -104,12 +104,34 @@
             value="Meter"
             onclick="getValue2()"
           />
-          Sq. Meters
+          Meters
         </div>
 
         <!-- {/* Area Input */} -->
         <div class="input">
           <form id="form">
+            <label htmlFor="height"
+              >Enter Height in<span id="heightIn">Feet:</span>
+            </label>
+            <input
+              type="number"
+              id="height"
+              value=""
+              placeholder="Enter Height"
+            />
+            <label htmlFor="width"
+              >Enter Width in<span id="widthIn">Feet:</span>
+            </label>
+            <input
+              type="number"
+              id="width"
+              value=""
+              placeholder="Enter Width"
+            />
+            <button type="submit">Calculate</button>
+          </form>
+
+          <!-- <form id="form">
             <label htmlFor="area"
               >Enter Area in Sq.<span id="areaIn">Feet</span>
             </label>
@@ -120,12 +142,17 @@
               placeholder="Enter Surface Area"
             />
             <button type="submit">Calculate</button>
-          </form>
+          </form> -->
         </div>
 
         <!-- {/* Results */} -->
         <div class="result">
           <h3>Results:</h3>
+          <p>
+            Total Area: <span id="areaCalculated"></span> Sq<span id="units"
+              >Feet</span
+            >
+          </p>
 
           <p>Paint Needed: <span id="paint"></span> liters</p>
           <div class="NoOfBuck">
@@ -150,12 +177,16 @@
 
       function getValue1(e) {
         unit = "Feet";
-        document.getElementById("areaIn").innerText = "Feet";
+        document.getElementById("widthIn").innerText = "Feet";
+        document.getElementById("heightIn").innerText = "Feet";
+        document.getElementById("units").innerText = "Feet";
       }
 
       function getValue2(e) {
         unit = "Meter";
-        document.getElementById("areaIn").innerText = "Meter";
+        document.getElementById("widthIn").innerText = "Meter";
+        document.getElementById("heightIn").innerText = "Meter";
+        document.getElementById("units").innerText = "Meter";
       }
 
       function calculateBuckets(totalPaint, bucketSizes) {
@@ -221,9 +252,12 @@
       //Calling Function
       const handleSubmit = (e) => {
         e.preventDefault();
-        let area = document.querySelector("#area").value;
+        let l = document.querySelector("#height").value;
+        let b = document.querySelector("#width").value;
+        let area = l * b;
 
         if (area != 0) {
+          document.getElementById("areaCalculated").innerText = area;
           //Calling the function from utils.js
           let factors = CalculateFactors(area);
 
