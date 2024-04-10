@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>StarShield</title>
+    <style>
+      .Calculator {
+        margin-top: 3rem;
+        display: flex;
+        justify-content: center;
+        font-family: "Noto Sans", sans-serif;
+      }
+
+      .Calculator .Content {
+        width: 70%;
+        padding: 1rem 3rem;
+        margin-right: 2rem;
+        box-shadow: 2px 2px 10px black;
+      }
+
+      .Calculator h3 {
+        color: #991100;
+      }
+
+      .Content form {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        width: 50%;
+      }
+
+      .Content input {
+        height: 1.5rem;
+        border-radius: 10px;
+        padding: 0.5rem;
+      }
+
+      .Content button {
+        border: none;
+        width: 25%;
+        padding: 0.5rem 0;
+        color: white;
+        background-color: #4caf50;
+        cursor: pointer;
+      }
+
+      li {
+        list-style: none;
+      }
+
+      @media screen and (max-width: 750px) {
+        .Content button {
+          width: 40%;
+        }
+      }
+
+      @media screen and (max-width: 450px) {
+        .Content button {
+          width: 60%;
+        }
+      }
+
+      .Content span {
+        margin-left: 0.5rem;
+      }
+
+      .Content label {
+        color: #991100;
+      }
+
+      .radioBtn {
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="Calculator">
+      <div class="Content">
+        <h2>Star Gloss Shield</h2>
+        <h3>Paint Coverage & Cost Calculator</h3>
+        <!-- {/* Meter or Feet Radio Buttons */} -->
+        <div class="radioBtn">
+          <label for="radiob">Parameters in: </label>
+
+          <!-- {/* Feet */} -->
+          <input
+            type="radio"
+            name="areaVal"
+            id="feet"
+            value="Feet"
+            onclick="getValue1()"
+            checked
+          />
+          Feet
+
+          <!-- {/* Meter */} -->
+          <input
+            type="radio"
+            name="areaVal"
+            id="meter"
+            value="Meter"
+            onclick="getValue2()"
+          />
+          Meters
+        </div>
+
+        <!-- {/* Area Input */} -->
+        <div class="input">
+          <form id="form">
+            <label htmlFor="height"
+              >Enter Height in<span id="heightIn">Feet:</span>
+            </label>
+            <input
+              type="number"
+              id="height"
+              value=""
+              placeholder="Enter Height"
+            />
+            <label htmlFor="width"
+              >Enter Width in<span id="widthIn">Feet:</span>
+            </label>
+            <input
+              type="number"
+              id="width"
+              value=""
+              placeholder="Enter Width"
+            />
+            <button type="submit">Calculate</button>
+          </form>
+          <!-- <form id="form">
+            <label htmlFor="area"
+              >Enter Area in Sq.<span id="areaIn">Feet</span>
+            </label>
+            <input
+              type="number"
+              id="area"
+              value=""
+              placeholder="Enter Surface Area"
+            />
+            <button type="submit">Calculate</button>
+          </form> -->
+        </div>
+
+        <!-- {/* Results */} -->
+        <div class="result">
+          <h3>Results:</h3>
+          <p>
+            Total Area: <span id="areaCalculated"></span> Sq<span id="units"
+              >Feet</span
+            >
+          </p>
+
+          <p>Paint Needed: <span id="paint"></span> liters</p>
+          <div class="NoOfBuck">
+            No. of Buckets Needed:
+            <ul>
+              <li>
+                - No of Bucket of 18.2 Ltr: <span id="noOfBuck18l"></span>
+              </li>
+              <li>- No of Bucket of 9.1 Ltr: <span id="noOfBuck9l"></span></li>
+              <li>- No of Bucket of 3.6 Ltr: <span id="noOfBuck3l"></span></li>
+              <li>- No of Bucket of 1 Ltr: <span id="noOfBuck1l"></span></li>
+            </ul>
+          </div>
+
+          <p>
+            Cost Estimation For Star Cool Shield:
+            <span id="totalCost"></span> INR
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let unit;
+
+      function getValue1(e) {
+        unit = "Feet";
+        document.getElementById("widthIn").innerText = "Feet";
+        document.getElementById("heightIn").innerText = "Feet";
+        document.getElementById("units").innerText = "Feet";
+      }
+
+      function getValue2(e) {
+        unit = "Meter";
+        document.getElementById("widthIn").innerText = "Meter";
+        document.getElementById("heightIn").innerText = "Meter";
+        document.getElementById("units").innerText = "Meter";
+      }
+
+      //Function To Calculate Buckets
+      function calculateBuckets(totalPaint, bucketSizes) {
+        let bucketsNeeded = {};
+
+        for (let size of bucketSizes) {
+          if (size == 1) {
+            bucketsNeeded[size] = Math.ceil(totalPaint);
+          } else {
+            bucketsNeeded[size] = Math.floor(totalPaint / size);
+          }
+
+          totalPaint %= size;
+        }
+
+        return bucketsNeeded;
+      }
+
+      function CalculateFactors(area) {
+        // Object for our all factors
+        let factors = {
+          paint: 0,
+          bucks18: 0,
+          bucks9: 0,
+          bucks3: 0,
+          bucks1: 0,
+          cost: 0,
+        };
+
+        // 1 sq. meter = 10.74 sq feet
+        //When Unit is METER
+        if (unit === "Meter") {
+          let areaInSqFeet = area * 10.7639;
+          factors.paint = Math.ceil(
+            (Math.ceil(areaInSqFeet / 140) + Math.ceil(areaInSqFeet / 160)) / 2
+          );
+        }
+        // When unit is FEET
+        else {
+          factors.paint = Math.ceil(
+            (Math.ceil(area / 140) + Math.ceil(area / 160)) / 2
+          );
+        }
+
+        //Buckets Used....
+        let buckSizes = [18.2, 9.1, 3.6, 1];
+
+        let bucketsNeeded = calculateBuckets(factors.paint, buckSizes);
+
+        factors.bucks18 = bucketsNeeded[18.2];
+        factors.bucks9 = bucketsNeeded[9.1];
+        factors.bucks3 = bucketsNeeded[3.6];
+        factors.bucks1 = bucketsNeeded[1];
+
+        // Total Cost
+        factors.cost =
+          factors.bucks18 * 7490 +
+          factors.bucks9 * 3990 +
+          factors.bucks3 * 1690 +
+          factors.bucks1 * 590;
+
+        return factors;
+      }
+
+      //Calling Function
+      const handleSubmit = (e) => {
+        e.preventDefault();
+        let l = document.querySelector("#height").value;
+        let b = document.querySelector("#width").value;
+        let area = l * b;
+
+        if (area != 0) {
+          document.getElementById("areaCalculated").innerText = area;
+          //Calling the function from utils.js
+          let factors = CalculateFactors(area);
+
+          const paint = document.getElementById("paint");
+          const noOfBuck18l = document.getElementById("noOfBuck18l");
+          const noOfBuck9l = document.getElementById("noOfBuck9l");
+          const noOfBuck3l = document.getElementById("noOfBuck3l");
+          const noOfBuck1l = document.getElementById("noOfBuck1l");
+          const totalCost = document.getElementById("totalCost");
+          //Display Result in HTML
+          paint.innerText = factors.paint;
+          noOfBuck18l.innerText = factors.bucks18;
+          noOfBuck9l.innerText = factors.bucks9;
+          noOfBuck3l.innerText = factors.bucks3;
+          noOfBuck1l.innerText = factors.bucks1;
+          totalCost.innerText = factors.cost;
+        }
+      };
+
+      const form = document.getElementById("form");
+
+      form.addEventListener("submit", handleSubmit);
+    </script>
+  </body>
+</html>
