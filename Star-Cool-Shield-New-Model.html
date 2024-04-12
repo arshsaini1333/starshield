@@ -82,6 +82,17 @@
         text-align: center;
         font-size: 1.2rem;
       }
+
+      .wall {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      .wall div {
+        display: grid;
+        gap: 0.5rem;
+      }
     </style>
   </head>
 
@@ -90,7 +101,7 @@
 
     <div class="Calculator">
       <div class="Content">
-        <h2>Star Aqua Shield Transparent</h2>
+        <h2>Star Cool Shield</h2>
         <h3>Paint Coverage & Cost Calculator</h3>
         <!-- {/* Meter or Feet Radio Buttons */} -->
 
@@ -122,24 +133,34 @@
         <!-- Length and Width Input Fields -->
         <div class="input">
           <form id="form">
-            <label htmlFor="height"
-              >Enter Height in<span id="heightIn">Feet:</span>
-            </label>
-            <input
-              type="number"
-              id="hight"
-              value=""
-              placeholder="Enter Height"
-            />
-            <label htmlFor="width"
-              >Enter Width in<span id="widthIn">Feet:</span>
-            </label>
-            <input
-              type="number"
-              id="width"
-              value=""
-              placeholder="Enter Width"
-            />
+            <div class="wall">
+              <div>
+                <label htmlFor="height"
+                  >Enter Height in<span id="heightIn">Feet</span> for Wall 1:
+                </label>
+                <input
+                  type="number"
+                  name="height"
+                  class="height"
+                  value=""
+                  placeholder="Enter Height"
+                />
+              </div>
+              <div>
+                <label htmlFor="width"
+                  >Enter Width in<span id="widthIn">Feet</span> for Wall 1:
+                </label>
+                <input
+                  type="number"
+                  class="width"
+                  name="width"
+                  value=""
+                  placeholder="Enter Width"
+                />
+              </div>
+            </div>
+
+            <button type="button" id="addWall">Add Another Wall</button>
             <div class="or">Or</div>
 
             <!-- {/* Area Input */} -->
@@ -170,8 +191,11 @@
           <div class="NoOfBuck">
             No. of Buckets Needed:
             <ul>
-              <li>- No of Bucket of 20 Ltr: <span id="noOfBuck20l"></span></li>
-              <li>- No of Bucket of 5 Ltr: <span id="noOfBuck5l"></span></li>
+              <li>
+                - No of Bucket of 18.2 Ltr: <span id="noOfBuck18l"></span>
+              </li>
+              <li>- No of Bucket of 9.1 Ltr: <span id="noOfBuck9l"></span></li>
+              <li>- No of Bucket of 3.6 Ltr: <span id="noOfBuck3l"></span></li>
               <li>- No of Bucket of 1 Ltr: <span id="noOfBuck1l"></span></li>
             </ul>
           </div>
@@ -185,7 +209,7 @@
     </div>
 
     <script>
-      let unit;
+      let unit = "Feet";
 
       function getValue1(e) {
         unit = "Feet";
@@ -202,6 +226,45 @@
         document.getElementById("units").innerText = "Meter";
         document.getElementById("areaIn").innerText = "Meter";
       }
+
+      //Adding More Walls
+      document.getElementById("addWall").addEventListener("click", function () {
+        let wallsContainer = document.getElementById("form");
+        let walls = wallsContainer.getElementsByClassName("wall");
+        let wallCount = walls.length;
+
+        let wallDiv = document.createElement("div");
+        wallDiv.classList.add("wall");
+
+        let lengthLabel = document.createElement("label");
+        lengthLabel.textContent = `Enter Height for Wall ${wallCount + 1}:`;
+
+        let lengthInput = document.createElement("input");
+        lengthInput.type = "number";
+        lengthInput.classList.add("height");
+        lengthInput.value = "";
+        lengthInput.name = "height";
+        lengthInput.placeholder = "Enter Height";
+        wallDiv.appendChild(lengthLabel);
+        wallDiv.appendChild(lengthInput);
+
+        let widthLabel = document.createElement("label");
+        widthLabel.textContent = `Enter Width for Wall ${wallCount + 1}:`;
+
+        let widthInput = document.createElement("input");
+        widthInput.type = "number";
+        widthInput.classList.add("width");
+        widthInput.value = "";
+        widthInput.name = "width";
+        widthInput.placeholder = "Enter Width";
+        wallDiv.appendChild(widthLabel);
+        wallDiv.appendChild(widthInput);
+
+        wallsContainer.insertBefore(
+          wallDiv,
+          document.getElementById("addWall")
+        );
+      });
 
       function calculateBuckets(totalPaint, bucketSizes) {
         let bucketsNeeded = {};
@@ -223,8 +286,9 @@
         // Object for our all factors
         let factors = {
           paint: 0,
-          bucks20: 0,
-          bucks5: 0,
+          bucks18: 0,
+          bucks9: 0,
+          bucks3: 0,
           bucks1: 0,
           cost: 0,
         };
@@ -232,35 +296,35 @@
         // 1 sq. meter = 10.74 sq feet
         //When Unit is METER
         if (unit === "Meter") {
+          let areaInSqFeet = area * 10.76;
           factors.paint = Math.ceil(
-            (Math.round(area / 1.5) + Math.round(area / 2.5)) / 2
+            (Math.round(areaInSqFeet / 27) + Math.round(areaInSqFeet / 28)) / 2
           );
         }
         // When unit is FEET
         else {
-          let areaInSqMeter = area / 10.76;
           factors.paint = Math.ceil(
-            (Math.round(areaInSqMeter / 1.5) +
-              Math.round(areaInSqMeter / 2.5)) /
-              2
+            (Math.ceil(area / 27) + Math.ceil(area / 28)) / 2
           );
         }
 
         //Paint Used
 
-        let buckSizes = [20, 5, 1];
+        let buckSizes = [18.2, 9.1, 3.6, 1];
 
         let bucketsNeeded = calculateBuckets(factors.paint, buckSizes);
 
-        factors.bucks20 = bucketsNeeded[20];
-        factors.bucks5 = bucketsNeeded[5];
+        factors.bucks18 = bucketsNeeded[18.2];
+        factors.bucks9 = bucketsNeeded[9.1];
+        factors.bucks3 = bucketsNeeded[3.6];
         factors.bucks1 = bucketsNeeded[1];
 
         // Total Cost
         factors.cost =
-          factors.bucks20 * 14990 +
-          factors.bucks5 * 3890 +
-          factors.bucks1 * 890;
+          factors.bucks18 * 7890 +
+          factors.bucks9 * 4290 +
+          factors.bucks3 * 1890 +
+          factors.bucks1 * 590;
 
         return factors;
       }
@@ -268,11 +332,23 @@
       function calculatePaint(e) {
         e.preventDefault();
 
-        let l = document.getElementById("hight").value;
-        let b = document.getElementById("width").value;
+        let walls = document.getElementsByClassName("wall");
         let area = document.getElementById("area").value;
         if (!area) {
-          area = l * b;
+          let totalArea = 0;
+          for (var i = 0; i < walls.length; i++) {
+            let length = parseFloat(
+              walls[i].getElementsByClassName("height")[0].value
+            );
+            let width = parseFloat(
+              walls[i].getElementsByClassName("width")[0].value
+            );
+
+            if (!isNaN(length) && !isNaN(width)) {
+              totalArea += length * width;
+            }
+          }
+          area = totalArea;
         }
         if (area > 0) {
           document.getElementById("areaCalculated").innerText = area;
@@ -280,14 +356,16 @@
           let factors = CalculateFactors(area);
 
           const paint = document.getElementById("paint");
-          const noOfBuck20l = document.getElementById("noOfBuck20l");
-          const noOfBuck5l = document.getElementById("noOfBuck5l");
+          const noOfBuck18l = document.getElementById("noOfBuck18l");
+          const noOfBuck9l = document.getElementById("noOfBuck9l");
+          const noOfBuck3l = document.getElementById("noOfBuck3l");
           const noOfBuck1l = document.getElementById("noOfBuck1l");
           const totalCost = document.getElementById("totalCost");
           //Display Result in HTML
           paint.innerText = factors.paint;
-          noOfBuck20l.innerText = factors.bucks20;
-          noOfBuck5l.innerText = factors.bucks5;
+          noOfBuck18l.innerText = factors.bucks18;
+          noOfBuck9l.innerText = factors.bucks9;
+          noOfBuck3l.innerText = factors.bucks3;
           noOfBuck1l.innerText = factors.bucks1;
           totalCost.innerText = factors.cost;
         }
