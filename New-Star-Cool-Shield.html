@@ -113,7 +113,7 @@
       <div class="Content">
         <h2>Star Aqua Shield Plus</h2>
         <h3>Paint Coverage & Cost Calculator</h3>
-        <p class="dimensions">Do you know the area</p>
+        <p class="dimensions">Do you know the area?</p>
         <div class="btns">
           <button id="dimensionsButton" class="btnStyle">No</button>
           <button id="areaButton">Yes</button>
@@ -243,16 +243,15 @@
         // 1 sq. meter = 10.74 sq feet
         //When Unit is METER
         if (unit === "Meter") {
+          let areaInSqFeet = area * 10.7639;
           factors.paint = Math.ceil(
-            (Math.ceil(area / 1.5) + Math.ceil(area / 2.5)) / 2
+            (Math.ceil(areaInSqFeet / 27) + Math.ceil(areaInSqFeet / 28)) / 2
           );
         }
         // When unit is FEET
         else {
-          let areaInSqMeter = area / 10.7639;
           factors.paint = Math.ceil(
-            (Math.ceil(areaInSqMeter / 1.5) + Math.ceil(areaInSqMeter / 2.5)) /
-              2
+            (Math.ceil(area / 27) + Math.ceil(area / 28)) / 2
           );
         }
 
