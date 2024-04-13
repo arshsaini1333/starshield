@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Paint Calculator</title>
+    <style>
+      .Calculator {
+        margin-top: 3rem;
+        display: flex;
+        justify-content: center;
+        font-family: "Noto Sans", sans-serif;
+      }
+
+      .Calculator h3 {
+        color: #991100;
+      }
+
+      .Content form {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        width: 50%;
+      }
+
+      .Content input {
+        height: 1.5rem;
+        border-radius: 10px;
+        padding: 0.5rem;
+      }
+
+      .Content button {
+        cursor: pointer;
+      }
+
+      .Content .submit {
+        border: none;
+        width: 25%;
+        padding: 0.5rem 0;
+        color: white;
+        background-color: #4caf50;
+        cursor: pointer;
+      }
+
+      .Calculator .Content {
+        width: 70%;
+        padding: 1rem 3rem;
+        margin-right: 2rem;
+        box-shadow: 2px 2px 10px black;
+      }
+
+      .Content .hidden {
+        display: none;
+      }
+
+      .btns {
+        display: flex;
+        margin-bottom: 1rem;
+      }
+
+      .btns button {
+        height: 2rem;
+        border: none;
+        width: 5rem;
+        padding: 0 1rem;
+      }
+
+      li {
+        list-style: none;
+      }
+
+      @media screen and (max-width: 750px) {
+        .Content button {
+          width: 40%;
+        }
+        .Content input {
+          width: 60%;
+        }
+        .Content .submit {
+          width: 60%;
+        }
+      }
+
+      @media screen and (max-width: 450px) {
+        .Content button {
+          width: 60%;
+        }
+        .Content input {
+          width: 80%;
+        }
+        .Content .submit {
+          width: 100%;
+        }
+      }
+
+      .Content span {
+        margin-left: 0.5rem;
+      }
+
+      .Content label {
+        color: #991100;
+      }
+
+      .btnStyle {
+        background-color: #4caf50;
+        color: white;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="Calculator">
+      <div class="Content">
+        <h2>Star Aqua Shield Plus</h2>
+        <h3>Paint Coverage & Cost Calculator</h3>
+        <p class="dimensions">Do you know the area</p>
+        <div class="btns">
+          <button id="dimensionsButton" class="btnStyle">No</button>
+          <button id="areaButton">Yes</button>
+        </div>
+        <p>Enter You Measurements in</p>
+        <div class="btns">
+          <button id="feetsBtn" class="btnStyle">Feets</button>
+          <button id="metersBtn">Meters</button>
+        </div>
+        <form id="dimensionsForm">
+          <label for="length"
+            >Enter Height in<span class="unit">Feet</span>:
+          </label>
+          <input type="number" id="length" placeholder="Enter Height" />
+          <label for="breadth"
+            >Enter Width in<span class="unit">Feet</span>:</label
+          >
+          <input type="number" id="breadth" placeholder="Enter Width" />
+          <button type="submit" class="submit">Calculate</button>
+        </form>
+        <form id="areaForm" class="hidden">
+          <label for="area">Enter Area in<span class="unit">Feet</span>:</label>
+          <input type="number" id="area" placeholder="Enter Area" />
+          <button type="submit" class="submit">Calculate</button>
+        </form>
+
+        <!-- Results -->
+        <div class="result">
+          <h3>Results:</h3>
+
+          <p>
+            Total Area: <span id="areaCalculated"></span> Sq<span class="unit"
+              >Feet</span
+            >
+          </p>
+
+          <p>Paint Needed: <span id="paint"></span> liters</p>
+          <div class="NoOfBuck">
+            No. of Buckets Needed:
+            <ul>
+              <li>
+                - No of Bucket of 18.2 Ltr: <span id="noOfBuck18l"></span>
+              </li>
+              <li>- No of Bucket of 9.1 Ltr: <span id="noOfBuck9l"></span></li>
+              <li>- No of Bucket of 3.6 Ltr: <span id="noOfBuck3l"></span></li>
+              <li>- No of Bucket of 1 Ltr: <span id="noOfBuck1l"></span></li>
+            </ul>
+          </div>
+
+          <p>
+            Cost Estimation For Star Cool Shield:
+            <span id="totalCost"></span> INR
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const dimensionsButton = document.getElementById("dimensionsButton");
+      const areaButton = document.getElementById("areaButton");
+      const dimensionsForm = document.getElementById("dimensionsForm");
+      const areaForm = document.getElementById("areaForm");
+      const metersBtn = document.getElementById("metersBtn");
+      const feetsBtn = document.getElementById("feetsBtn");
+      let unit = "feet";
+      metersBtn.addEventListener("click", () => {
+        metersBtn.classList.add("btnStyle");
+        feetsBtn.classList.remove("btnStyle");
+        const units = document.getElementsByClassName("unit");
+        unit = "Meter";
+        units.item(0).innerHTML = "Meter";
+        units.item(1).innerHTML = "Meter";
+        units.item(2).innerHTML = "Meter";
+        units.item(3).innerHTML = "Meter";
+      });
+      feetsBtn.addEventListener("click", () => {
+        feetsBtn.classList.add("btnStyle");
+        metersBtn.classList.remove("btnStyle");
+        const units = document.getElementsByClassName("unit");
+        unit = "Feet";
+        units.item(0).innerHTML = "Feet";
+        units.item(1).innerHTML = "Feet";
+        units.item(2).innerHTML = "Feet";
+        units.item(3).innerHTML = "Feet";
+      });
+      dimensionsButton.addEventListener("click", () => {
+        dimensionsButton.classList.add("btnStyle");
+        areaButton.classList.remove("btnStyle");
+        dimensionsForm.classList.remove("hidden");
+        areaForm.classList.add("hidden");
+      });
+
+      areaButton.addEventListener("click", () => {
+        areaButton.classList.add("btnStyle");
+        dimensionsButton.classList.remove("btnStyle");
+        areaForm.classList.remove("hidden");
+        dimensionsForm.classList.add("hidden");
+      });
+
+      function calculateBuckets(totalPaint, bucketSizes) {
+        let bucketsNeeded = {};
+
+        for (let size of bucketSizes) {
+          if (size == 1) {
+            bucketsNeeded[size] = Math.ceil(totalPaint);
+          } else {
+            bucketsNeeded[size] = Math.floor(totalPaint / size);
+          }
+
+          totalPaint %= size;
+        }
+
+        return bucketsNeeded;
+      }
+
+      function CalculateFactors(area) {
+        // Object for our all factors
+        let factors = {
+          paint: 0,
+          bucks18: 0,
+          bucks9: 0,
+          bucks3: 0,
+          bucks1: 0,
+          cost: 0,
+        };
+
+        // 1 sq. meter = 10.74 sq feet
+        //When Unit is METER
+        if (unit === "Meter") {
+          factors.paint = Math.ceil(
+            (Math.ceil(area / 1.5) + Math.ceil(area / 2.5)) / 2
+          );
+        }
+        // When unit is FEET
+        else {
+          let areaInSqMeter = area / 10.7639;
+          factors.paint = Math.ceil(
+            (Math.ceil(areaInSqMeter / 1.5) + Math.ceil(areaInSqMeter / 2.5)) /
+              2
+          );
+        }
+
+        //Buckets Used....
+        let buckSizes = [18.2, 9.1, 3.6, 1];
+
+        let bucketsNeeded = calculateBuckets(factors.paint, buckSizes);
+
+        factors.bucks18 = bucketsNeeded[18.2];
+        factors.bucks9 = bucketsNeeded[9.1];
+        factors.bucks3 = bucketsNeeded[3.6];
+        factors.bucks1 = bucketsNeeded[1];
+
+        // Total Cost
+        factors.cost =
+          factors.bucks18 * 9990 +
+          factors.bucks9 * 5090 +
+          factors.bucks3 * 2090 +
+          factors.bucks1 * 690;
+
+        return factors;
+      }
+
+      function passingArea(area) {
+        if (area != 0) {
+          document.getElementById("areaCalculated").innerText = area;
+          //Calling the function from utils.js
+          let factors = CalculateFactors(area);
+
+          const paint = document.getElementById("paint");
+          const noOfBuck18l = document.getElementById("noOfBuck18l");
+          const noOfBuck9l = document.getElementById("noOfBuck9l");
+          const noOfBuck3l = document.getElementById("noOfBuck3l");
+          const noOfBuck1l = document.getElementById("noOfBuck1l");
+          const totalCost = document.getElementById("totalCost");
+          //Display Result in HTML
+          paint.innerText = factors.paint;
+          noOfBuck18l.innerText = factors.bucks18;
+          noOfBuck9l.innerText = factors.bucks9;
+          noOfBuck3l.innerText = factors.bucks3;
+          noOfBuck1l.innerText = factors.bucks1;
+          totalCost.innerText = factors.cost;
+        }
+      }
+      dimensionsForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const l = document.getElementById("length").value;
+        const b = document.getElementById("breadth").value;
+        passingArea(l * b);
+      });
+
+      areaForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const a = document.getElementById("area").value;
+        passingArea(a);
+      });
+    </script>
+  </body>
+</html>
