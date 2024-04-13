@@ -29,7 +29,7 @@
       }
 
       .Content input {
-        height: 1.5rem;
+        height: 2rem;
         border-radius: 10px;
         padding: 0.5rem;
       }
@@ -43,19 +43,23 @@
         cursor: pointer;
       }
 
+      .or {
+        text-align: center;
+      }
+
       li {
         list-style: none;
       }
 
       @media screen and (max-width: 750px) {
         .Content button {
-          width: 40%;
+          width: 70%;
         }
       }
 
       @media screen and (max-width: 450px) {
         .Content button {
-          width: 60%;
+          width: 100%;
         }
       }
 
@@ -64,6 +68,7 @@
       }
 
       .Content label {
+        font-weight: bold;
         color: #991100;
       }
 
@@ -112,27 +117,29 @@
         <!-- {/* Area Input */} -->
         <div class="input">
           <form id="form">
-            <label htmlFor="height"
+            <!-- <label htmlFor="height"
               >Enter Height in<span id="heightIn">Feet:</span>
-            </label>
+            </label> -->
+            <label for="height"
+              >Enter Area Using Height and Widht in
+              <span id="HWunits">Feet:</span></label
+            >
             <input
               type="number"
               id="height"
               value=""
               placeholder="Enter Height"
             />
-            <label htmlFor="width"
+            <!-- <label htmlFor="width"
               >Enter Width in<span id="widthIn">Feet:</span>
-            </label>
+            </label> -->
             <input
               type="number"
               id="width"
               value=""
               placeholder="Enter Width"
             />
-            <button type="submit">Calculate</button>
-          </form>
-          <!-- <form id="form">
+            <div class="or">Or</div>
             <label htmlFor="area"
               >Enter Area in Sq.<span id="areaIn">Feet</span>
             </label>
@@ -142,6 +149,10 @@
               value=""
               placeholder="Enter Surface Area"
             />
+            <button type="submit">Calculate</button>
+          </form>
+          <!-- <form id="form">
+            
             <button type="submit">Calculate</button>
           </form> -->
         </div>
@@ -164,6 +175,8 @@
                 - No of Bucket of 18.2 Ltr: <span id="noOfBuck18l"></span>
               </li>
               <li>- No of Bucket of 9.1 Ltr: <span id="noOfBuck9l"></span></li>
+              <li>- No of Bucket of 3.6 Ltr: <span id="noOfBuck3l"></span></li>
+              <li>- No of Bucket of 1 Ltr: <span id="noOfBuck1l"></span></li>
             </ul>
           </div>
 
@@ -180,16 +193,34 @@
 
       function getValue1(e) {
         unit = "Feet";
-        document.getElementById("widthIn").innerText = "Feet";
-        document.getElementById("heightIn").innerText = "Feet";
+        document.getElementById("HWunits").innerText = "Feet";
+        // document.getElementById("heightIn").innerText = "Feet";
         document.getElementById("units").innerText = "Feet";
+        document.getElementById("areaIn").innerText = "Feet";
       }
 
       function getValue2(e) {
         unit = "Meter";
-        document.getElementById("widthIn").innerText = "Meter";
-        document.getElementById("heightIn").innerText = "Meter";
+        document.getElementById("HWunits").innerText = "Meter";
+        // document.getElementById("heightIn").innerText = "Meter";
         document.getElementById("units").innerText = "Meter";
+        document.getElementById("areaIn").innerText = "Meter";
+      }
+
+      function calculateBuckets(totalPaint, bucketSizes) {
+        let bucketsNeeded = {};
+
+        for (let size of bucketSizes) {
+          if (size == 1) {
+            bucketsNeeded[size] = Math.ceil(totalPaint);
+          } else {
+            bucketsNeeded[size] = Math.floor(totalPaint / size);
+          }
+
+          totalPaint %= size;
+        }
+
+        return bucketsNeeded;
       }
 
       function CalculateFactors(area) {
@@ -198,6 +229,8 @@
           paint: 0,
           bucks18: 0,
           bucks9: 0,
+          bucks3: 0,
+          bucks1: 0,
           cost: 0,
         };
 
@@ -218,24 +251,21 @@
 
         // If Paint used is less than 10
 
-        if (factors.paint <= 10) {
-          factors.bucks9 = 1;
-        }
-        // If paint used is between 11-19L
-        else if (factors.paint >= 11 && factors.paint <= 19) {
-          factors.bucks18 = 1;
-        }
-        // If paint is more than 20 than we first find the no of 18L buckets and then rest we compelte wiht 9.1L
-        else {
-          factors.bucks18 = Math.floor(factors.paint / 18.2);
+        let buckSizes = [18.2, 9.1, 3.6, 1];
 
-          let remainPaint = factors.paint % 18.2;
+        let bucketsNeeded = calculateBuckets(factors.paint, buckSizes);
 
-          factors.bucks9 = Math.ceil(remainPaint / 9.1);
-        }
+        factors.bucks18 = bucketsNeeded[18.2];
+        factors.bucks9 = bucketsNeeded[9.1];
+        factors.bucks3 = bucketsNeeded[3.6];
+        factors.bucks1 = bucketsNeeded[1];
 
         // Total Cost
-        factors.cost = factors.bucks18 * 7890 + factors.bucks9 * 4290;
+        factors.cost =
+          factors.bucks18 * 7890 +
+          factors.bucks9 * 4290 +
+          factors.bucks3 * 1890 +
+          factors.bucks1 * 590;
 
         return factors;
       }
@@ -245,9 +275,13 @@
         e.preventDefault();
         let l = document.querySelector("#height").value;
         let b = document.querySelector("#width").value;
-        let area = l * b;
+        let area = document.getElementById("area").value;
 
-        if (area != 0) {
+        if (!area) {
+          area = l * b;
+        }
+
+        if (area > 0) {
           document.getElementById("areaCalculated").innerText = area;
           //Calling the function from utils.js
           let factors = CalculateFactors(area);
@@ -255,11 +289,15 @@
           const paint = document.getElementById("paint");
           const noOfBuck18l = document.getElementById("noOfBuck18l");
           const noOfBuck9l = document.getElementById("noOfBuck9l");
+          const noOfBuck3l = document.getElementById("noOfBuck3l");
+          const noOfBuck1l = document.getElementById("noOfBuck1l");
           const totalCost = document.getElementById("totalCost");
           //Display Result in HTML
           paint.innerText = factors.paint;
           noOfBuck18l.innerText = factors.bucks18;
           noOfBuck9l.innerText = factors.bucks9;
+          noOfBuck3l.innerText = factors.bucks3;
+          noOfBuck1l.innerText = factors.bucks1;
           totalCost.innerText = factors.cost;
         }
       };
